@@ -115,13 +115,13 @@ root_dir = "results"
 current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 save_path = f"{root_dir}/{current_time}"
 if not os.path.exists(save_path):
-    os.mkdirs(save_path)
+    os.makedirs(save_path)
 
 # 実行時のパラメータを保存
 with open(f"{save_path}/parameter.txt", mode="w") as f:
-    params = [N, epsilon, sigma, a, phi, start_time, finish_time, step_width]
+    params = ["N", "epsilon", "sigma", "a", "phi", "start_time", "finish_time", "step_width"]
     for param in params:
-        f.write(f"{param}\t\t: {eval(param)}")
+        f.write(f"{param}\t\t: {eval(param)}\n")
 
 # 使用したネットワークの情報を保存(未実装)
 
