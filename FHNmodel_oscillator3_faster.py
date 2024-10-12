@@ -10,6 +10,7 @@ import networkx as nx
 import datetime
 from numba import njit
 import time
+import os
 
 """ 1. 実験パラメータの設定 """
 # 定数の設定
@@ -56,19 +57,6 @@ print(f'Clustering Coefficient: {clustering_coeff}')
 print(f'Shortest Path Length: {shortest_path_length}')
 
 """ 3. 関数の定義 """
-# FHNモデルの定義
-# def fhn_ode(t, X, N, epsilon, sigma, a, A, B):
-#     u = X[:N]
-#     v = X[N:]
-#     du = np.zeros(N)
-#     dv = np.zeros(N)
-#     for k in range(N):
-#         sum_u = sum(A[k, j] * (B[0, 0] * (u[j] - u[k]) + B[0, 1] * (v[j] - v[k])) for j in range(N))
-#         sum_v = sum(A[k, j] * (B[1, 0] * (u[j] - u[k]) + B[1, 1] * (v[j] - v[k])) for j in range(N))
-#         du[k] = (u[k] - u[k]**3 / 3 - v[k]) / epsilon + sigma * sum_u
-#         dv[k] = u[k] + a + sigma * sum_v
-#     return np.concatenate([du, dv])
-
 @njit
 def fhn_ode(t, X, N, epsilon, sigma, a, A, B):
     u = X[:N]
@@ -121,11 +109,21 @@ phases = np.array([calculate_phases(u_sol[:, i], v_sol[:, i]) for i in range(len
 r_values = np.array([calculate_r(phases[i, :]) for i in range(len(t))])
 
 
-""" 7. プロット処理 """
-# プロットに必要な変数の定義
+""" 7. プロット、ログの処理 """
+# 保存するパスを指定
+root_dir = "results"
 current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+save_path = f"{root_dir}/{current_time}"
+if not os.path.exists(save_path):
+    os.mkdirs(save_path)
 
-# 実行パラメータを保存(未実装)
+# 実行時のパラメータを保存
+with open(f"{save_path}/parameter.txt", mode="w") as f:
+    params = [N, epsilon, sigma, a, phi, start_time, finish_time, step_width]
+    for param in params:
+        f.write(f"{param}\t\t: {eval(param)}")
+
+# 使用したネットワークの情報を保存(未実装)
 
 # 同期度のプロット
 plt.figure(figsize=(20, 6))
@@ -135,7 +133,7 @@ plt.title('Time evolution of the global Kuramoto order parameter r(t)')
 plt.xlabel('Time')
 plt.ylabel('r(t)')
 plt.grid(True)
-plt.savefig(f'results/{current_time}-synchronization.png')
+plt.savefig(f'{save_path}/synchronization_{start_time}-{finish_time}-{step_width}.png')
 
 ## 膜電位uのプロット
 #plt.figure(figsize=(10, 6))
@@ -143,7 +141,7 @@ plt.savefig(f'results/{current_time}-synchronization.png')
 #plt.title('Membrane potentials of the FHN oscillators')
 #plt.xlabel('Time')
 #plt.ylabel('u_k')
-#plt.savefig(f'results/{current_time}-u.png')
+#plt.savefig(f'{save_path}/u_{start_time}-{finish_time}-{step_width}.png')
 
 # 隣接行列Aの可視化
 plt.figure(figsize=(8, 8))
@@ -153,7 +151,7 @@ plt.colorbar(label='Link Strength')
 plt.title('Adjacency Matrix')
 plt.xlabel('Node index')
 plt.ylabel('Node index')
-plt.savefig(f'results/{current_time}-adjacency-matrix.png')
+plt.savefig(f'{save_path}/adjacency-matrix_{start_time}-{finish_time}-{step_width}.png')
 
 """ 実行時間の表示 """
-print(f"[solve] {dbg_solve_end_time - dbg_solve_start_time}")
+print(f"solve time: {dbg_solve_end_time - dbg_solve_start_time}s")
