@@ -125,7 +125,6 @@ r_values = np.array([calculate_r(phases[i, :]) for i in range(len(t))])
 # プロットに必要な変数の定義
 current_time = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 
-
 # 実行パラメータを保存(未実装)
 
 # 同期度のプロット
