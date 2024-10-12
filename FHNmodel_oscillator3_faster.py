@@ -11,6 +11,7 @@ import datetime
 from numba import njit
 import time
 import os
+import network
 
 """ 1. 実験パラメータの設定 """
 # 定数の設定
@@ -22,41 +23,26 @@ phi = np.pi/2 - 0.1
 
 # 時間の設定
 start_time = 0
-finish_time = 60
-step_width = 601
-#finish_time = 10800
-#step_width = 108001
+finish_time = 10800    # 3時間
+step_width = 108001
 
 # カップリング行列B
 B = np.array([[np.cos(phi), np.sin(phi)], [-np.sin(phi), np.cos(phi)]])
 
 """ 2. ネットワーク構造の定義 """
 """ (現段階ではWSネットワークのみ実装) """
-# ネットワーク作成時のパラメータの定義
+#network_name = "ws-network"
+#network_name = "unweighted-fractal"
+network_name = "weighted-fractal"
+
+N = 82  # フラクタル構造ネットワークの場合は82に設定する
 k = 6   # 平均次数 (各ノードが持つ隣接ノードの数)
-p = 1   # 再配線確率 (p = 1 で完全なランダムネットワーク)
-num_links = 270  # 全リンク数
-link_weight = 1  # リンク強度
-desired_clustering_coeff = 0.05  # 目標クラスタリング係数
-desired_shortest_path_length = 2.7  # 目標平均最短経路長
+p = 0.0   # 再配線確率 (p = 1 で完全なランダムネットワーク)
 
-# ワッツ-ストロガッツ・ネットワークを生成
-G = nx.watts_strogatz_graph(N, k, p)
-#A = np.random.rand(N, N)
-
-# 隣接行列 A を生成し、リンクの重みを設定
-A = nx.to_numpy_array(G) * link_weight
-
-# Aの対角成分を0で初期化
-for i in range(N): A[i][i] = 0.0
-
-# 現在のネットワークのクラスタリング係数と平均最短経路長を計算
-clustering_coeff = nx.average_clustering(G, weight=None)
-shortest_path_length = nx.average_shortest_path_length(G)
-print(f'Clustering Coefficient: {clustering_coeff}')
-print(f'Shortest Path Length: {shortest_path_length}')
+A = network.make_network(network_name, N, k, p)
 
 """ 3. 関数の定義 """
+# FHNモデルの定義
 @njit
 def fhn_ode(t, X, N, epsilon, sigma, a, A, B):
     u = X[:N]
