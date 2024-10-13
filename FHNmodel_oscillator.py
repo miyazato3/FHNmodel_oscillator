@@ -32,15 +32,16 @@ B = np.array([[np.cos(phi), np.sin(phi)], [-np.sin(phi), np.cos(phi)]])
 """ 2. ネットワーク構造の定義 """
 """ (現段階ではWSネットワークのみ実装) """
 # 使用するネットワーク構造と構築に必要なパラメータを設定する
-network_name = "ws-network"             # WSネットワーク
-#network_name = "unweighted-fractal"     # 重み無しフラクタル
+#network_name = "ws-network"             # WSネットワーク
+network_name = "unweighted-fractal"     # 重み無しフラクタル
 #network_name = "weighted-fractal"       # 重み付きフラクタル(未実装)
 k = 6       # 平均次数(WSネットワークで使用)
-p = 1.0     # 再配線確率(p=1 で完全なランダムネットワーク)(WSネットワークで使用)
+p = 0.0     # 再配線確率(p=1 で完全なランダムネットワーク)(WSネットワークで使用)
 
 # フラクタルネットワークの特別な設定
 if network_name == "unweighted-fractal" or network_name == "weighted-fractal":
     N = 82
+    sigma = 0.01
 
 # ネットワーク作成
 A, clustering_coeff, shortest_path_length, S = network.make_network(network_name, N, k, p)
