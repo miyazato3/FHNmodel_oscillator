@@ -1,6 +1,16 @@
 import networkx as nx
 import numpy as np
 
+""" 必要な関数の定義 """
+# 平均ノード次数 or 平均ノード強度を計算する関数
+def calc_avg_node_strength(A, N):
+    avg_node_strength = 0.0
+    for i in range(N):
+        node_i_strength = A[i].sum()
+        avg_node_strength += node_i_strength
+    avg_node_strength /= N
+    return avg_node_strength
+
 """ ネットワーク構造の定義 """
 def make_network(network_name, N, arg_k, arg_p):
     if network_name == "ws-network":
@@ -9,7 +19,19 @@ def make_network(network_name, N, arg_k, arg_p):
         A, num_links = make_unweighted_fractal(N)
     elif network_name == "weighted-fractal":
         A = make_weighted_fractal(N)
-    return A
+
+    # 隣接行列Aからグラフを生成
+    G = nx.from_numpy_array(A)
+
+    # グラフGのクラスタリング係数と平均最短経路長を計算
+    clustering_coeff = nx.average_clustering(G, weight=None)
+    shortest_path_length = nx.average_shortest_path_length(G)
+    
+    # 平均ノード次数 or 平均ノード強度を計算
+    S = calc_avg_node_strength(A, N)
+
+    return A, clustering_coeff, shortest_path_length, S
+
     
 # ワッツ-ストロガッツ・ネットワークを生成する関数
 def make_ws_network(N, arg_k, arg_p):
@@ -17,9 +39,6 @@ def make_ws_network(N, arg_k, arg_p):
     k = arg_k           # 平均次数 (各ノードが持つ隣接ノードの数)
     p = arg_p           # 再配線確率 (p = 1 で完全なランダムネットワーク)
     link_weight = 1     # リンク強度
-    #num_links = 270  # 全リンク数
-    #desired_clustering_coeff = 0.05  # 目標クラスタリング係数
-    #desired_shortest_path_length = 2.7  # 目標平均最短経路長
     
     # ワッツ-ストロガッツ・ネットワークを生成
     G = nx.watts_strogatz_graph(N, k, p)
@@ -29,12 +48,6 @@ def make_ws_network(N, arg_k, arg_p):
     
     # Aの対角成分を0で初期化
     for i in range(N): A[i][i] = 0.0
-
-    # 現在のネットワークのクラスタリング係数と平均最短経路長を計算
-    clustering_coeff = nx.average_clustering(G, weight=None)
-    shortest_path_length = nx.average_shortest_path_length(G)
-    print(f'Clustering Coefficient: {clustering_coeff}')
-    print(f'Shortest Path Length: {shortest_path_length}')
 
     return A
 
@@ -65,25 +78,18 @@ def make_unweighted_fractal(N):
         
     # ネットワークの特徴の計算
     num_links = np.sum(A)
-    average_node_strength = np.sum(A) / N
-    print(f'Number of non-zero links: {num_links}')
-    print(f'Average node strength: {average_node_strength}')
 
     return A, num_links
 
-# 重み付きフラクタルネットワークを生成する関数
+# 重み付きフラクタルネットワークを生成する関数(未実装、脳波データが必要)
 def make_weighted_fractal(N):
     A, num_links = make_unweighted_fractal(N)
 
     # 重み付きネットワークを構築するためのリンクの重みを設定
     np.random.seed(128)  # 再現性のためのシード
-    empirical_weights = np.random.uniform(0.001, 1.00, size=int(num_links))  # 仮の重み
+    empirical_weights = np.random.uniform(0.00001, 1.00, size=int(num_links))  # 仮の重み
     
     # 重み付き隣接行列の生成
     A[A == 1] = empirical_weights
-    
-    # 重み付きネットワークの特徴の計算
-    weighted_strength = np.sum(A) / N
-    print(f'Average node strength (weighted): {weighted_strength}')
     
     return A

@@ -17,16 +17,14 @@ import network
 # 定数の設定
 N = 90  # 脳領域の数
 epsilon = 0.05
-sigma = 0.1
+sigma = 0.0506
 a = 0.5
 phi = np.pi/2 - 0.1
 
 # 時間の設定(3時間)
 start_time = 0
-finish_time = 60
-step_width = 601
-#finish_time = 10800
-#step_width = 108001
+finish_time = 10800
+step_width = 108001
 
 # カップリング行列B
 B = np.array([[np.cos(phi), np.sin(phi)], [-np.sin(phi), np.cos(phi)]])
@@ -36,16 +34,17 @@ B = np.array([[np.cos(phi), np.sin(phi)], [-np.sin(phi), np.cos(phi)]])
 # 使用するネットワーク構造と構築に必要なパラメータを設定する
 network_name = "ws-network"             # WSネットワーク
 #network_name = "unweighted-fractal"     # 重み無しフラクタル
-#network_name = "weighted-fractal"       # 重み付きフラクタル
-k = 6       # 平均次数 (各ノードが持つ隣接ノードの数)
-p = 0.0     # 再配線確率 (p = 1 で完全なランダムネットワーク)
+#network_name = "weighted-fractal"       # 重み付きフラクタル(未実装)
+k = 6       # 平均次数(WSネットワークで使用)
+p = 1.0     # 再配線確率(p=1 で完全なランダムネットワーク)(WSネットワークで使用)
 
-# フラクタルネットワークの場合の特別な設定
+# フラクタルネットワークの特別な設定
 if network_name == "unweighted-fractal" or network_name == "weighted-fractal":
     N = 82
 
 # ネットワーク作成
-A = network.make_network(network_name, N, k, p)
+A, clustering_coeff, shortest_path_length, S = network.make_network(network_name, N, k, p)
+print(f"S={S}")
 
 """ 3. 関数の定義 """
 # FHNモデルの定義
@@ -117,7 +116,7 @@ with open(f"{save_path}/parameter.txt", mode="w") as f:
 
 # 使用したネットワークの情報を保存(未実装)
 with open(f"{save_path}/network_parameter.txt", mode="w") as f:
-    params = ["network_name", "k", "p"]
+    params = ["network_name", "k", "p", "clustering_coeff", "shortest_path_length", "S"]
     for param in params:
         f.write(f"{param}\t\t: {eval(param)}\n")
 
