@@ -12,7 +12,6 @@ from numba import njit
 import time
 import os
 import network
-import pdb
 
 """ 1. 実験パラメータの設定 """
 # 定数の設定
@@ -88,7 +87,6 @@ t = np.linspace(start_time, finish_time, step_width)
 # ODE solverをsolve_ivpに変更
 dbg_solve_start_time = time.time()
 sol = solve_ivp(fhn_ode, [start_time, finish_time], X0, method='LSODA', t_eval=t, args=(N, epsilon, sigma, a, A, B))
-pdb.set_trace()
 dbg_solve_end_time = time.time()
 
 # 解(u,v)の取得
@@ -126,9 +124,9 @@ with open(f"{save_path}/network_parameter.txt", mode="w") as f:
 # ネットワーク構造を保存
 np.savetxt(f"{save_path}/network_structure.txt", A)
 
-# 解を保存
-np.savetxt(f"{save_path}/u_sol.csv", u_sol, delimiter=",")
-np.savetxt(f"{save_path}/v_sol.csv", v_sol, delimiter=",")
+# 解を保存(視認性を挙げるために転置する, N行t列 -> t行N列)
+np.savetxt(f"{save_path}/u_sol.txt", u_sol.T)
+np.savetxt(f"{save_path}/v_sol.txt", v_sol.T)
 
 # 同期度のプロット
 plt.figure(figsize=(20, 6))
