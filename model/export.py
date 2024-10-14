@@ -43,6 +43,7 @@ def plot_synchro(path, iteration, t, r_values, const):
     plt.ylabel('r(t)')
     plt.grid(True)
     plt.savefig(f'{path}/{iteration}_synchronization_{const.start_time}-{const.finish_time}-{const.step_width}.png')
+    plt.close()
 
 # 膜電位uをプロットする関数
 def plot_u(path, iteration, t, u_sol, const):
@@ -52,6 +53,7 @@ def plot_u(path, iteration, t, u_sol, const):
     plt.xlabel('Time')
     plt.ylabel('u_k')
     plt.savefig(f'{path}/{iteration}_u_{const.start_time}-{const.finish_time}-{const.step_width}.png')
+    plt.close()
 
 # 隣接行列Aを可視化する関数
 def plot_adjacency_matrix(path, iteration, A, const):
@@ -63,3 +65,4 @@ def plot_adjacency_matrix(path, iteration, A, const):
     plt.xlabel('Node index')
     plt.ylabel('Node index')
     plt.savefig(f'{path}/{iteration}_adjacency-matrix_{const.start_time}-{const.finish_time}-{const.step_width}.png')
+    plt.close()
