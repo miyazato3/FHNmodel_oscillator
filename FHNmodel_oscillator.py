@@ -36,7 +36,7 @@ B = np.array([[np.cos(phi), np.sin(phi)], [-np.sin(phi), np.cos(phi)]])
 network_name = "unweighted-fractal"     # 重み無しフラクタル
 #network_name = "weighted-fractal"       # 重み付きフラクタル(未実装)
 k = 6       # 平均次数(WSネットワークで使用)
-p = 0.0     # 再配線確率(p=1 で完全なランダムネットワーク)(WSネットワークで使用)
+p = 0.000     # 再配線確率(p=1 で完全なランダムネットワーク)(WSネットワークで使用)
 
 # フラクタルネットワークの特別な設定
 if network_name == "unweighted-fractal" or network_name == "weighted-fractal":
@@ -129,8 +129,8 @@ np.savetxt(f"{save_path}/u_sol.txt", u_sol.T)
 np.savetxt(f"{save_path}/v_sol.txt", v_sol.T)
 
 # 同期度のプロット
-plt.figure(figsize=(20, 6))
-plt.plot(t, r_values)
+plt.figure(figsize=(10, 8))
+plt.plot(t, r_values, linewidth=0.05)
 plt.ylim(0.0, 1.0)
 plt.title('Time evolution of the global Kuramoto order parameter r(t)')
 plt.xlabel('Time')
