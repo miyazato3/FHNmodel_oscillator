@@ -82,7 +82,8 @@ def experiment(time_setting, network_name, k, p, num_iterations):
     # 実行時のパラメータを保存
     export.save_simulation_param(save_path, const)
 
-    all_sol = []
+    all_u_sol = []
+    all_v_sol = []
     for n in range(const.num_iterations):
         np.random.seed(n)
         fhn = FHNmodel_oscillator(const)
@@ -91,7 +92,8 @@ def experiment(time_setting, network_name, k, p, num_iterations):
         sol = fhn.solver()
         u_sol = sol.y[:const.N, :]
         v_sol = sol.y[const.N:, :]
-        all_sol.append(sol)
+        all_u_sol.append(u_sol)
+        all_v_sol.append(v_sol)
         
         """ 同期度を求める """
         phases = np.array([analyze.calculate_phases(u_sol[:, i], v_sol[:, i]) for i in range(len(fhn.t))])  # 時間経過に伴う位相の変遷を計算
@@ -108,14 +110,11 @@ def experiment(time_setting, network_name, k, p, num_iterations):
         print(f"Finished {n + 1}/{const.num_iterations}")
 
     """ シミュレーションnum_iteration回分の平均を計算する """
-    all_u_sol = all_sol.y[:const.N, :]
-    all_v_sol = all_sol.y[const.N:, :]
     mean_u_sol = np.mean(all_u_sol, axis=0)
     mean_v_sol = np.mean(all_v_sol, axis=0)
 
     # 解を保存(視認性を挙げるために転置する, N行t列 -> t行N列)
-    export.save_solution(save_path, "all", mean_u_sol.T)
-    export.save_solution(save_path, "all", mean_v_sol.T)
+    export.save_solution(save_path, "all", mean_u_sol.T, mean_v_sol.T)
 
     # 時間経過に伴う位相の変遷を計算
     mean_phases = np.array([analyze.calculate_phases(mean_u_sol[:, i], mean_v_sol[:, i]) for i in range(len(fhn.t))])
