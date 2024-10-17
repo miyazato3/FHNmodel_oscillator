@@ -36,7 +36,7 @@ def save_solution(path, iteration, u_sol, v_sol):
 # 同期度をプロットする関数
 def plot_synchro(path, iteration, t, r_values, const):
     plt.figure(figsize=(10, 8))
-    plt.plot(t, r_values, linewidth=0.05)
+    plt.plot(t, r_values, linewidth=0.1)
     plt.ylim(0.0, 1.0)
     plt.title('Time evolution of the global Kuramoto order parameter r(t)')
     plt.xlabel('Time')
