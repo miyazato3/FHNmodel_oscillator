@@ -2,3 +2,4 @@
 /results/*
 /__pycache__/*
 /model/__pycache__/*
+nohup.out

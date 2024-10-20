@@ -15,7 +15,7 @@ def save_simulation_param(path, const):
             f.write(f"{param}\t\t: {eval('const.' + param)}\n")
 
 # 使用したネットワークの情報を保存する関数
-def save_network_param(path, iteration,const, fhn):
+def save_network_param(path, iteration, const, fhn):
     with open(f"{path}/{iteration}_network_parameter.txt", mode="w") as f:
         params1 = ["network_name", "k", "p"]
         params2 = ["clustering_coeff", "shortest_path_length", "S"]
@@ -23,6 +23,17 @@ def save_network_param(path, iteration,const, fhn):
             f.write(f"{param}\t\t: {eval('const.' + param)}\n")
         for param in params2:
             f.write(f"{param}\t\t: {eval('fhn.' + param)}\n")
+        f.write(f"link\t\t: {np.sum(fhn.A) / 2}\n")     # リンク数
+            
+# シミュレーション結果を保存する関数
+def save_simulation_eval(path, iteration, all_mean_r, all_delta_r, all_high_synchro):
+    with open(f"{path}/{iteration}_evaluation.txt", mode="w") as f:
+        f.write(f"all_mean_r\t\t: {all_mean_r}\n")
+        f.write(f"all_delta_r\t\t: {all_delta_r}\n")
+        f.write(f"all_high_synchro\t\t: {all_high_synchro}\n")
+        f.write(f"[mean] all_mean_r\t\t: {np.mean(all_mean_r)}\n")
+        f.write(f"[mean] all_delta_r\t\t: {np.mean(all_delta_r)}\n")
+        f.write(f"[mean] all_high_synchro\t\t: {np.mean(all_high_synchro)}\n")
 
 # ネットワーク構造を保存する関数
 def save_network_structure(path, iteration, A):

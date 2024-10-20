@@ -1,15 +1,6 @@
 import networkx as nx
 import numpy as np
-
-""" 必要な関数の定義 """
-# 平均ノード次数 or 平均ノード強度を計算する関数
-def calc_avg_node_strength(A, N):
-    avg_node_strength = 0.0
-    for i in range(N):
-        node_i_strength = A[i].sum()
-        avg_node_strength += node_i_strength
-    avg_node_strength /= N
-    return avg_node_strength
+from model import analyze
 
 """ ネットワーク構造の定義 """
 def make_network(network_name, N, arg_k, arg_p):
@@ -24,11 +15,11 @@ def make_network(network_name, N, arg_k, arg_p):
     G = nx.from_numpy_array(A)
 
     # グラフGのクラスタリング係数と平均最短経路長を計算
-    clustering_coeff = nx.average_clustering(G, weight=None)
-    shortest_path_length = nx.average_shortest_path_length(G)
+    clustering_coeff = analyze.calc_clustering_coeff(G, weight=None)
+    shortest_path_length = analyze.calc_shortest_path_length(G)
     
     # 平均ノード次数 or 平均ノード強度を計算
-    S = calc_avg_node_strength(A, N)
+    S = analyze.calc_avg_node_strength(A, N)
 
     return A, clustering_coeff, shortest_path_length, S
 
