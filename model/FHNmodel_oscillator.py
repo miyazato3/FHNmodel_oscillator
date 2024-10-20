@@ -132,4 +132,4 @@ def experiment(time_setting, network_name, k, p, num_iterations):
     export.plot_synchro(save_path, "all", fhn.t, mean_r_log, const)
 
     # シミュレーション評価用のログを保存
-    export.save_simulation_eval(save_path, n, all_mean_r, all_delta_r, all_high_synchro)
+    export.save_simulation_eval(save_path, all_mean_r, all_delta_r, all_high_synchro)

@@ -26,8 +26,8 @@ def save_network_param(path, iteration, const, fhn):
         f.write(f"link\t\t: {np.sum(fhn.A) / 2}\n")     # リンク数
             
 # シミュレーション結果を保存する関数
-def save_simulation_eval(path, iteration, all_mean_r, all_delta_r, all_high_synchro):
-    with open(f"{path}/{iteration}_evaluation.txt", mode="w") as f:
+def save_simulation_eval(path, all_mean_r, all_delta_r, all_high_synchro):
+    with open(f"{path}/evaluation.txt", mode="w") as f:
         f.write(f"all_mean_r\t\t: {all_mean_r}\n")
         f.write(f"all_delta_r\t\t: {all_delta_r}\n")
         f.write(f"all_high_synchro\t\t: {all_high_synchro}\n")
