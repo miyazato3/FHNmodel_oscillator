@@ -34,7 +34,7 @@ def fhn_ode(t, X, N, epsilon, sigma, a, A, B):
     return result
 
 class FHNmodel_oscillator:
-    def __init__(self, const):
+    def __init__(self, const, n):
         # 初期値の設定
         self.const = const
         self.solve_time = 0.0
@@ -46,7 +46,7 @@ class FHNmodel_oscillator:
         self.clustering_coeff,\
         self.shortest_path_length,\
         self.S = network.make_network(const.network_name,
-                                      const.N, const.k, const.p)
+                                      const.N, const.k, const.p, n)
         
     # 解を求める関数
     def solver(self):
@@ -87,10 +87,20 @@ def experiment(time_setting, network_name, k, p, num_iterations):
     all_mean_r = []
     all_delta_r = []
     all_high_synchro = []
+    all_clus_coeff = []
+    all_shortest_len = []
+    all_S = []
+    all_link = []
     for n in range(const.num_iterations):
         np.random.seed(n)
-        fhn = FHNmodel_oscillator(const)
+        fhn = FHNmodel_oscillator(const, n)
         
+        """ ネットワーク特徴を記録するための前処理 """
+        all_clus_coeff.append(fhn.clustering_coeff)
+        all_shortest_len.append(fhn.shortest_path_length)
+        all_S.append(fhn.S)
+        all_link.append(np.sum(fhn.A) / 2)
+
         """ 解を求める """
         sol = fhn.solver()
         u_sol = sol.y[:const.N, :]
@@ -111,16 +121,18 @@ def experiment(time_setting, network_name, k, p, num_iterations):
         all_high_synchro.append(high_synchro)
 
         """ プロット関係、ログを記録する """
-        export.save_network_param(save_path, n, const, fhn)         # 使用したネットワークの情報を保存
         export.save_network_structure(save_path, n, fhn.A)          # ネットワーク構造を保存
         export.save_solution(save_path, n, u_sol.T, v_sol.T)        # 解を保存(視認性を挙げるために転置する, N行t列 -> t行N列)
-        export.plot_synchro(save_path, n, fhn.t, r_log, const)   # 同期度のプロット
+        export.plot_synchro(save_path, n, fhn.t, r_log, const)      # 同期度のプロット
         export.plot_adjacency_matrix(save_path, n, fhn.A, const)    # 隣接行列Aの可視化
 
         print(f"solve time: {fhn.solve_time}s")
         print(f"Finished {n + 1}/{const.num_iterations}")
 
     """ シミュレーションnum_iteration回分の平均に関する処理 """
+    # 使用したネットワークの情報を保存
+    export.save_network_param(save_path, n, const, all_clus_coeff, all_shortest_len, all_S, all_link)
+
     # 全シミュレーションの解の平均を計算し保存
     mean_u_sol = np.mean(all_u_sol, axis=0)
     mean_v_sol = np.mean(all_v_sol, axis=0)

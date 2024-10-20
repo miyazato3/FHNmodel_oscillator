@@ -3,9 +3,9 @@ import numpy as np
 from model import analyze
 
 """ ネットワーク構造の定義 """
-def make_network(network_name, N, arg_k, arg_p):
+def make_network(network_name, N, arg_k, arg_p, n):
     if network_name == "ws-network":
-        A = make_ws_network(N, arg_k, arg_p)
+        A = make_ws_network(N, arg_k, arg_p, n)
     elif network_name == "unweighted-fractal":
         A, num_links = make_unweighted_fractal(N)
     elif network_name == "weighted-fractal":
@@ -25,14 +25,14 @@ def make_network(network_name, N, arg_k, arg_p):
 
     
 # ワッツ-ストロガッツ・ネットワークを生成する関数
-def make_ws_network(N, arg_k, arg_p):
+def make_ws_network(N, arg_k, arg_p, n):
     # パラメータの定義
     k = arg_k           # 平均次数 (各ノードが持つ隣接ノードの数)
     p = arg_p           # 再配線確率 (p = 1 で完全なランダムネットワーク)
     link_weight = 1     # リンク強度
     
     # ワッツ-ストロガッツ・ネットワークを生成
-    G = nx.watts_strogatz_graph(N, k, p)
+    G = nx.watts_strogatz_graph(N, k, p, seed=n)
     
     # 隣接行列 A を生成し、リンクの重みを設定
     A = nx.to_numpy_array(G) * link_weight
