@@ -3,8 +3,7 @@ from model import FHNmodel_oscillator
 def main():
     """ 1. 実験パラメータの設定 """
     time_setting = [0, 11764.7, 10001]   # 時間の設定(3時間) [start, finish, witdh]
-    time_setting = [0, 10, 10]   # 時間の設定(3時間) [start, finish, witdh]
-    num_iterations = 2                 # シミュレーションの反復回数
+    num_iterations = 10                 # シミュレーションの反復回数
     
     """ 2. シミュレーション実行 """
     """ 2-1. WS(Watts & Strogatz)ネットワーク """

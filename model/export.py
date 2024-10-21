@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from model improt analyze
 
 # パスが無かったら作成する関数
 def check_path(path):
@@ -31,14 +32,14 @@ def save_network_param(path, iteration, const, all_clus_coeff, all_shortest_len,
         f.write(f"[mean] all_link\t\t: {np.mean(all_link)}\n")
             
 # シミュレーション結果を保存する関数
-def save_simulation_eval(path, all_mean_r, all_delta_r, all_high_synchro):
+def save_simulation_eval(path, all_mean_r, all_delta_r, all_high_synchro, mean_r_log):
     with open(f"{path}/evaluation.txt", mode="w") as f:
         f.write(f"all_mean_r\t\t: {all_mean_r}\n")
         f.write(f"all_delta_r\t\t: {all_delta_r}\n")
         f.write(f"all_high_synchro\t\t: {all_high_synchro}\n")
         f.write(f"[mean] all_mean_r\t\t: {np.mean(all_mean_r)}\n")
-        f.write(f"[mean] all_delta_r\t\t: {np.mean(all_delta_r)}\n")
-        f.write(f"[mean] all_high_synchro\t\t: {np.mean(all_high_synchro)}\n")
+        f.write(f"[mean] all_delta_r\t\t: {mean_r_log.max() - mean_r_log.min()}\n")
+        f.write(f"[mean] all_high_synchro\t\t: {analyze.calc_high_synchro_rate(mean_r_log, 0.8)}\n")
 
 # ネットワーク構造を保存する関数
 def save_network_structure(path, iteration, A):
