@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-from model improt analyze
+from model import analyze
 
 # パスが無かったら作成する関数
 def check_path(path):

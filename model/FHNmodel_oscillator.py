@@ -25,7 +25,7 @@ def fhn_ode(t, X, N, epsilon, sigma, a, A, B):
     for k in range(N):
         sum_u = np.sum(A[k, :] * (B[0, 0] * (u - u[k]) + B[0, 1] * (v - v[k])))
         sum_v = np.sum(A[k, :] * (B[1, 0] * (u - u[k]) + B[1, 1] * (v - v[k])))
-        du[k] = (u[k] - u[k]**3 / 3 - v[k]) / epsilon + sigma * sum_u
+        du[k] = (u[k] - u[k]**3 / 3 - v[k] + sigma * sum_u) / epsilon
         dv[k] = u[k] + a + sigma * sum_v
     
     result = np.zeros(2 * N)
