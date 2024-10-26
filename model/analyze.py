@@ -2,9 +2,9 @@ import numpy as np
 import networkx as nx
 from model.const import Const
 
-# 位相の計算
+# 位相の計算(幾何位相)
 def calculate_phases(u, v):
-    return np.arctan2(v, u)
+    return np.arctan(v / u)
 
 # 同期度rの計算
 def calculate_r(phases, N):

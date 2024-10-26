@@ -10,17 +10,18 @@ def main():
     # k:平均次数, p:再配線確率
     network_name = "ws-network"
     k = 6
-    #p = 0.0
+
+    p = 0.0
+    FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
+    #p = 0.006
     #FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
-    p = 0.006
-    FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
-    p = 0.232
-    FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
-    p = 1.0
-    FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
+    #p = 0.232
+    #FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
+    #p = 1.0
+    #FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
 
     """ 2-2. 重み無しフラクタルネットワーク """
-    network_name = "unweighted-fractal"
-    FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
+    #network_name = "unweighted-fractal"
+    #FHNmodel_oscillator.experiment(time_setting, network_name, k, p, num_iterations)
     
 main()
