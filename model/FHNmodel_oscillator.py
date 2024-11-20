@@ -36,7 +36,6 @@ def fhn_ode(t, X, N, epsilon, sigma, a, A, B):
 class FHNmodel_oscillator:
     def __init__(self, const, n):
         # 初期値の設定
-        print(f"2. {np.random.random()}")
         self.const = const
         self.solve_time = 0.0
         self.t = np.linspace(self.const.start_time,
@@ -52,10 +51,11 @@ class FHNmodel_oscillator:
     # 解を求める関数
     def solver(self):
         # 初期設定
-        print(f"5. {np.random.random()}")
         u0 = np.random.rand(self.const.N)
         v0 = np.random.rand(self.const.N)
         X0 = np.concatenate([u0, v0])
+
+        solve_start_time = time.time()
 
         sol = solve_ivp(fhn_ode,
                         [self.const.start_time, self.const.finish_time],
@@ -65,6 +65,9 @@ class FHNmodel_oscillator:
                         args=(self.const.N, self.const.epsilon,
                               self.const.sigma, self.const.a,
                               self.A, self.const.B))
+        
+        solve_end_time = time.time()
+        self.solve_time = solve_end_time - solve_start_time
 
         return sol
 
@@ -91,7 +94,6 @@ def experiment(time_setting, network_name, k, p, num_iterations):
     all_link = []
     for n in range(const.num_iterations):
         np.random.seed(n)
-        print(f"1. {np.random.random()}")
         fhn = FHNmodel_oscillator(const, n)
         
         """ ネットワーク特徴を記録するための前処理 """
@@ -108,11 +110,8 @@ def experiment(time_setting, network_name, k, p, num_iterations):
         all_v_sol.append(v_sol)
         
         """ 同期度を求める(t時間分) """
-        #phases = np.array([analyze.calc_dynamical_phases(u_sol[:, i], v_sol[:, i], fhn, 2.56) for i in range(len(fhn.t))])  # 時間経過に伴う位相の変遷を計算
-        print(f"6. {np.random.random()}")
-        phases = np.array([analyze.calc_dynamical_phases(u_sol.T[i, :], v_sol.T[i, :]) for i in range(len(fhn.t))])  # 時間経過に伴う位相の変遷を計算
-        r_log = np.array([analyze.calc_r(phases[i, :], const.N) for i in range(len(fhn.t))])        # 各時刻での同期度rを計算
-        exit(1)
+        dynamical_phases = np.array(analyze.calc_dynamical_phases(u_sol, v_sol))  # 時間経過に伴う位相の変遷を計算
+        r_log = np.array(analyze.calc_r(dynamical_phases, const.N, fhn.t))        # 各時刻での同期度rを計算
         
         # シミュレーション評価用
         mean_r = np.mean(r_log)                             # n回目のシミュレーションの平均同期度を求める
@@ -141,9 +140,8 @@ def experiment(time_setting, network_name, k, p, num_iterations):
     export.save_solution(save_path, "all", mean_u_sol.T, mean_v_sol.T)
 
     # 全シミュレーションの平均同期度rを計算しプロット
-    #mean_phases = np.array([analyze.calc_dynamical_phases(mean_u_sol[:, i], mean_v_sol[:, i]) for i in range(len(fhn.t))])
-    mean_phases = np.array([analyze.calc_dynamical_phases(mean_u_sol[:, i], mean_v_sol[:, i], fhn, 2.56) for i in range(len(fhn.t))])
-    mean_r_log = np.array([analyze.calc_r(mean_phases[i, :], const.N) for i in range(len(fhn.t))])
+    mean_dynamical_phases = np.array(analyze.calc_dynamical_phases(mean_u_sol, mean_v_sol))
+    mean_r_log = np.array(analyze.calc_r(mean_dynamical_phases, const.N, fhn.t))
     export.plot_synchro(save_path, "all", fhn.t, mean_r_log, const)
 
     # シミュレーション評価用のログを保存

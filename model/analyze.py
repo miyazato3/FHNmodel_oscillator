@@ -3,7 +3,6 @@ import networkx as nx
 
 # 動的位相の計算
 def calc_dynamical_phases(u, v):
-    print(f"7. {np.random.random()}")
     path_lukas="Transformation_geom/transf_a0.50.dat"
     lukas=np.loadtxt(path_lukas, delimiter=' ')
     x=lukas[:,0]
@@ -16,7 +15,6 @@ def calc_dynamical_phases(u, v):
 
 # 同期度rの計算
 def calc_r(dynamical_phases, N, t):
-    print(f"8. {np.random.random()}")
     r = np.array([np.abs(np.sum(np.exp(1j * dynamical_phases[:, i]))) / N for i in range(len(t))])
     return r
 

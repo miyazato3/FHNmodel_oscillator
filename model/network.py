@@ -4,7 +4,6 @@ from model import analyze
 
 """ ネットワーク構造の定義 """
 def make_network(network_name, N, arg_k, arg_p, seed):
-    print(f"3. {np.random.random()}")
     if network_name == "ws-network":
         A = make_ws_network(N, arg_k, arg_p, seed)
     elif network_name == "unweighted-fractal":
@@ -27,7 +26,6 @@ def make_network(network_name, N, arg_k, arg_p, seed):
     
 # ワッツ-ストロガッツ・ネットワークを生成する関数
 def make_ws_network(N, arg_k, arg_p, seed):
-    print(f"4. {np.random.random()}")
     # パラメータの定義
     k = arg_k           # 平均次数 (各ノードが持つ隣接ノードの数)
     p = arg_p           # 再配線確率 (p = 1 で完全なランダムネットワーク)
