@@ -1,14 +1,25 @@
 import numpy as np
 import networkx as nx
-from model.const import Const
 
-# 位相の計算(幾何位相)
-def calculate_phases(u, v):
-    return np.arctan(v / u)
+# 動的位相の計算
+def calc_dynamical_phases(u, v):
+    print(f"7. {np.random.random()}")
+    path_lukas="Transformation_geom/transf_a0.50.dat"
+    lukas=np.loadtxt(path_lukas, delimiter=' ')
+    x=lukas[:,0]
+    y=lukas[:,1]
+    z=np.polyfit(x,y,5)
+    p=np.poly1d(z)
+    dynamical_phases = p(np.arctan2(v[:][:],u[:][:]))
+
+    return dynamical_phases
 
 # 同期度rの計算
-def calculate_r(phases, N):
-    return np.abs(np.sum(np.exp(1j * phases)) / N)
+def calc_r(dynamical_phases, N, t):
+    print(f"8. {np.random.random()}")
+    r = np.array([np.abs(np.sum(np.exp(1j * dynamical_phases[:, i]))) / N for i in range(len(t))])
+    return r
+
 
 # 平均ノード次数 or 平均ノード強度を計算する関数
 def calc_avg_node_strength(A, N):

@@ -38,7 +38,8 @@ def save_simulation_eval(path, all_mean_r, all_delta_r, all_high_synchro, mean_r
         f.write(f"all_delta_r\t\t: {all_delta_r}\n")
         f.write(f"all_high_synchro\t\t: {all_high_synchro}\n")
         f.write(f"[mean] all_mean_r\t\t: {np.mean(all_mean_r)}\n")
-        f.write(f"[mean] all_delta_r\t\t: {mean_r_log.max() - mean_r_log.min()}\n")
+        #f.write(f"[mean] all_delta_r\t\t: {mean_r_log.max() - mean_r_log.min()}\n")
+        f.write(f"[mean] all_delta_r\t\t: {np.mean(all_delta_r)}\n")
         f.write(f"[mean] all_high_synchro\t\t: {analyze.calc_high_synchro_rate(mean_r_log, 0.8)}\n")
 
 # ネットワーク構造を保存する関数

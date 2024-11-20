@@ -3,13 +3,14 @@ import numpy as np
 from model import analyze
 
 """ ネットワーク構造の定義 """
-def make_network(network_name, N, arg_k, arg_p, n):
+def make_network(network_name, N, arg_k, arg_p, seed):
+    print(f"3. {np.random.random()}")
     if network_name == "ws-network":
-        A = make_ws_network(N, arg_k, arg_p, n)
+        A = make_ws_network(N, arg_k, arg_p, seed)
     elif network_name == "unweighted-fractal":
         A, num_links = make_unweighted_fractal(N)
-    elif network_name == "weighted-fractal":
-        A = make_weighted_fractal(N)
+    #elif network_name == "weighted-fractal":
+    #    A = make_weighted_fractal(N)
 
     # 隣接行列Aからグラフを生成
     G = nx.from_numpy_array(A)
@@ -25,14 +26,15 @@ def make_network(network_name, N, arg_k, arg_p, n):
 
     
 # ワッツ-ストロガッツ・ネットワークを生成する関数
-def make_ws_network(N, arg_k, arg_p, n):
+def make_ws_network(N, arg_k, arg_p, seed):
+    print(f"4. {np.random.random()}")
     # パラメータの定義
     k = arg_k           # 平均次数 (各ノードが持つ隣接ノードの数)
     p = arg_p           # 再配線確率 (p = 1 で完全なランダムネットワーク)
     link_weight = 1     # リンク強度
     
     # ワッツ-ストロガッツ・ネットワークを生成
-    G = nx.watts_strogatz_graph(N, k, p, seed=n)
+    G = nx.watts_strogatz_graph(N, k, p, seed=seed)
     
     # 隣接行列 A を生成し、リンクの重みを設定
     A = nx.to_numpy_array(G) * link_weight
@@ -73,14 +75,14 @@ def make_unweighted_fractal(N):
     return A, num_links
 
 # 重み付きフラクタルネットワークを生成する関数(未実装、脳波データが必要)
-def make_weighted_fractal(N):
-    A, num_links = make_unweighted_fractal(N)
-
-    # 重み付きネットワークを構築するためのリンクの重みを設定
-    np.random.seed(128)  # 再現性のためのシード
-    empirical_weights = np.random.uniform(0.00001, 1.00, size=int(num_links))  # 仮の重み
-    
-    # 重み付き隣接行列の生成
-    A[A == 1] = empirical_weights
-    
-    return A
+#def make_weighted_fractal(N):
+#    A, num_links = make_unweighted_fractal(N)
+#
+#    # 重み付きネットワークを構築するためのリンクの重みを設定
+#    np.random.seed(128)  # 再現性のためのシード
+#    empirical_weights = np.random.uniform(0.00001, 1.00, size=int(num_links))  # 仮の重み
+#    
+#    # 重み付き隣接行列の生成
+#    A[A == 1] = empirical_weights
+#    
+#    return A
