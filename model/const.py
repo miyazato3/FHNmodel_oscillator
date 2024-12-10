@@ -1,7 +1,7 @@
 import numpy as np
 
 class Const:
-    def __init__(self, time_setting, network_name, k, p, num_iterations):
+    def __init__(self, time_setting, network_name, k, p, num_iterations, init_seed):
         # シミュレーションパラメータ
         self.N = 90
         self.epsilon = 0.05
@@ -10,6 +10,7 @@ class Const:
         self.phi = np.pi/2 - 0.1
         self.num_iterations = num_iterations
         self.B = np.array([[np.cos(self.phi), np.sin(self.phi)], [-np.sin(self.phi), np.cos(self.phi)]])
+        self.init_seed = init_seed
 
         # ネットワークパラメータ
         self.network_name = network_name

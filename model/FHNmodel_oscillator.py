@@ -34,7 +34,7 @@ def fhn_ode(t, X, N, epsilon, sigma, a, A, B):
     return result
 
 class FHNmodel_oscillator:
-    def __init__(self, const, n):
+    def __init__(self, const, seed):
         # 初期値の設定
         self.const = const
         self.solve_time = 0.0
@@ -46,13 +46,13 @@ class FHNmodel_oscillator:
         self.clustering_coeff,\
         self.shortest_path_length,\
         self.S = network.make_network(const.network_name,
-                                      const.N, const.k, const.p, n)
+                                      const.N, const.k, const.p, seed)
         
     # 解を求める関数
     def solver(self):
         # 初期設定
-        u0 = np.random.rand(self.const.N)
-        v0 = np.random.rand(self.const.N)
+        u0 = np.random.uniform(-1, 1, size=self.const.N)
+        v0 = np.random.uniform(-1, 1, size=self.const.N)
         X0 = np.concatenate([u0, v0])
 
         solve_start_time = time.time()
@@ -71,8 +71,8 @@ class FHNmodel_oscillator:
 
         return sol
 
-def experiment(time_setting, network_name, k, p, num_iterations):
-    const = Const(time_setting, network_name, k, p, num_iterations)
+def experiment(time_setting, network_name, k, p, num_iterations, init_seed):
+    const = Const(time_setting, network_name, k, p, num_iterations, init_seed)
 
     # 結果の出力先を設定
     root_dir = "results"
@@ -92,8 +92,12 @@ def experiment(time_setting, network_name, k, p, num_iterations):
     all_shortest_len = []
     all_S = []
     all_link = []
+    
+    # seed値を設定する
+    initial_seed = const.init_seed
+    np.random.seed(initial_seed)
+
     for n in range(const.num_iterations):
-        np.random.seed(n)
         fhn = FHNmodel_oscillator(const, n)
         
         """ ネットワーク特徴を記録するための前処理 """
@@ -132,7 +136,7 @@ def experiment(time_setting, network_name, k, p, num_iterations):
 
     """ シミュレーションnum_iteration回分の平均に関する処理 """
     # 使用したネットワークの情報を保存
-    export.save_network_param(save_path, n, const, all_clus_coeff, all_shortest_len, all_S, all_link)
+    export.save_network_param(save_path, const, all_clus_coeff, all_shortest_len, all_S, all_link)
 
     # 全シミュレーションの解の平均を計算し保存
     mean_u_sol = np.mean(all_u_sol, axis=0)

@@ -16,7 +16,7 @@ def save_simulation_param(path, const):
             f.write(f"{param}\t\t: {eval('const.' + param)}\n")
 
 # 使用したネットワークの情報を保存する関数
-def save_network_param(path, iteration, const, all_clus_coeff, all_shortest_len, all_S, all_link):
+def save_network_param(path, const, all_clus_coeff, all_shortest_len, all_S, all_link):
     with open(f"{path}/network_parameter.txt", mode="w") as f:
         f.write(f"network_name\t\t: {const.network_name}\n")
         if const.network_name == "ws-network":
